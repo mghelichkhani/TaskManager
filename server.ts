@@ -7,6 +7,7 @@ let server = app.listen(port, function() {console.log('Express Initialized on Po
 let routes = require('./routes/route');
 let mockData = require('./db/data.json');
 let db = require('./db/db');
+let moment = require('moment');
 
 // Body Parser
 app.use(bodyParser.json());
@@ -21,6 +22,7 @@ app.use(function (req, res, next) {
     next();
 });
 
+
 // Defining Routes
 app.use('/api/v1.0', routes);
 
@@ -28,16 +30,19 @@ app.use('/api/v1.0', routes);
 function pushRandomTask() {
     var mockObject = mockData.pop();
     
+    var now = moment(new Date());
+    var datetime = now.format('YYYY-MM-DD HH:mm:ss');
+    
     var newTask = {
         'id' : mockObject.id,
-        'createdAt' : mockObject.createdAt,
-        'updatedAt' : mockObject.createdAt,
+        'createdAt' : datetime,
+        'updatedAt' : datetime,
         'dueDate' : mockObject.dueDate,
         'resolvedAt' : null,
         'title' : mockObject.title,
         'description' : mockObject.description,
         'priority' : mockObject.priority,
-        'status' : mockObject.status
+        'status' : 'Not Done'
     };
 
     db.tasks.push(newTask);

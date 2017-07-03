@@ -30,9 +30,8 @@ router.post('/task', function(req, res, next) {
 
 // Delete Task
 router.delete('/task/:id', function(req, res, next) {
-  //var task = _.remove(db.tasks, {'id': req.params.id});
-  console.log(req.params);
-  //res.json(task);
+  var task = _.remove(db.tasks, {'id': req.params.id});
+  res.json(task);
 });
 
 // UpSert Task
