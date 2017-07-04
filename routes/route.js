@@ -2,7 +2,7 @@ var express = require('express');
 var _ = require('lodash');
 var router = express.Router();
 var db = require('../db/db');
-
+var uuidv4 = require('uuid/v4');
 
 // Fetch All Tasks
 router.get('/tasks', function(req, res, next) {
@@ -15,26 +15,13 @@ router.get('/task/:id', function(req, res, next) {
   res.json(task)
 });
 
-// Save Task
-router.post('/task', function(req, res, next) {
-  var task = req.body;
-  if(!task) {
-    res.status(400);
-    res.json({
-      "error": "Nothing Posted"
-    });
-  } else {
-    db.tasks.push(task);
-  }
-});
-
 // Delete Task
 router.delete('/task/:id', function(req, res, next) {
   var task = _.remove(db.tasks, {'id': req.params.id});
   res.json(task);
 });
 
-// UpSert Task
+// Save/Update Task
 router.put('/task/:id', function(req, res, next) {
   var task = req.body;
   var match = _.find(db.tasks, {'id': req.params.id});
@@ -42,6 +29,7 @@ router.put('/task/:id', function(req, res, next) {
         var index = _.indexOf(db.tasks, _.find(db.tasks, {'id': req.params.id}));
         db.tasks.splice(index, 1, task);
     } else {
+        task.id = uuidv4();
         db.tasks.push(task);
     }
 });
